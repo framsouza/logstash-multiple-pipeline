@@ -44,7 +44,7 @@ spec:
         configMap:
           name: logstash-multiple-pipeline
           items:
-            - key: version_created.config
-              path: version_created.config
-            - key: project_created.config
-              path: project_created.config
+            - key: pipeline-00.config
+              path: pipeline-00.config
+            - key: pipeline-01.config
+              path: pipeline-01.config
