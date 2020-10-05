@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-multiple-pipeline
+  namespace: it
+data:
+  logstash.yml: |-
+    http.host: "0.0.0.0"
+
+  pipelines.yml: |-
+    - pipeline.id: project_created
+      path.config: "/usr/share/logstash/pipeline/pipeline-00.config"
+      queue.type: persisted
+    - pipeline.id: version_created
+      path.config: "/usr/share/logstash/pipeline/pipeline-01.config"
+      queue.type: persisted
+
+  pipeline-00.config: |-
+    input { }
+
+    output {
+      stdout {
+        codec => rubydebug
+      }
+    }
+
+  pipeline-01.config: |-
+    input { }
+
+    filter {
+      mutate {
+        add_field => {
+        }
+
+    output {
+      stdout {
+        codec => rubydebug
+      }
+    }

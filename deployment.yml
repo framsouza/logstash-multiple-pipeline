@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash-multiple-pipeline
+  namespace: it
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash-multiple-pipeline
+  template:
+    metadata:
+      labels:
+        app: logstash-multiple-pipeline
+    spec:
+      containers:
+      - name: logstash
+        image: gcr.io/host-project-shared-vpc/logstash
+        readinessProbe:
+          tcpSocket:
+            port: logstash
+          initialDelaySeconds: 40
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 20
+        ports:
+        - containerPort: 5044
+          name: logstash
+        volumeMounts:
+          - name: config-volume
+            mountPath: /usr/share/logstash/config
+          - name: volume-pipeline
+            mountPath: /usr/share/logstash/pipeline
+      volumes:
+      - name: config-volume
+        configMap:
+          name: logstash-multiple-pipeline
+          items:
+            - key: logstash.yml
+              path: logstash.yml
+            - key: pipelines.yml
+              path: pipelines.yml
+      - name: volume-pipeline
+        configMap:
+          name: logstash-multiple-pipeline
+          items:
+            - key: version_created.config
+              path: version_created.config
+            - key: project_created.config
+              path: project_created.config
